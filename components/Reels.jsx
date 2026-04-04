@@ -22,7 +22,7 @@ export default function Reels() {
     }
   ];
 
-  const [likes, setLikes] = useState([120, 85]);
+  const [likes, setLikes] = useState([0, 0]);
   const [liked, setLiked] = useState([]);
   const [muted, setMuted] = useState(true);
 

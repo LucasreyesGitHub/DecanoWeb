@@ -3,49 +3,43 @@ import { useState, useEffect, useRef } from "react";
 
 export default function Reels() {
 
-  const data = [
-    {
-      id: 1,
-      video: "/video1.mp4",
-      title: "Recibimiento 🔥",
-      user: "lourdesceriani",
-      avatar: "/user1.jpg",
-      link: "https://www.instagram.com/lourdesceriani"
-    },
-    {
-      id: 2,
-      video: "/video2.mp4",
-      title: "Recibimiento brutal 🔴⚪🔵",
-      user: "@bolso_pasion",
-      avatar: "/user2.jpg",
-      link: "https://instagram.com/bolso_pasion"
-    }
-  ];
+const data = [
+  {
+    id: 1,
+    video: "/video1.mp4",
+    title: "Recibimiento 🔥",
+    user: "lourdesceriani",
+    link: "https://www.instagram.com/lourdesceriani"
+  },
+  {
+    id: 2,
+    video: "/video2.mp4",
+    title: "Recibimiento brutal 🔴⚪🔵",
+    user: "bolso_pasion",
+    link: "https://instagram.com/bolso_pasion"
+  }
+];
 
-  const [likes, setLikes] = useState([0, 0]);
+  const [likes, setLikes] = useState([]);
   const [liked, setLiked] = useState([]);
   const [muted, setMuted] = useState(true);
 
   const videoRefs = useRef([]);
 
-  useEffect(() => {
-    const stored = JSON.parse(localStorage.getItem("likedVideos")) || [];
-    setLiked(stored);
-  }, []);
+ const handleLike = (i, id) => {
+  if (liked.includes(id)) return;
 
-  const handleLike = (i, id) => {
-    if (liked.includes(id)) return;
+  const newLikes = [...likes];
+  newLikes[i]++;
 
-    const newLikes = [...likes];
-    newLikes[i]++;
+  const newLiked = [...liked, id];
 
-    const newLiked = [...liked, id];
+  setLikes(newLikes);
+  setLiked(newLiked);
 
-    setLikes(newLikes);
-    setLiked(newLiked);
-
-    localStorage.setItem("likedVideos", JSON.stringify(newLiked));
-  };
+  localStorage.setItem("likedVideos", JSON.stringify(newLiked));
+  localStorage.setItem("likesCount", JSON.stringify(newLikes));
+};
 
   const togglePlay = (i) => {
     const video = videoRefs.current[i];

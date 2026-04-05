@@ -20,19 +20,17 @@ export default function Reels() {
     }
   ];
 
-  // 🔥 ahora es objeto por id
   const [likes, setLikes] = useState({});
   const [liked, setLiked] = useState([]);
   const [muted, setMuted] = useState(true);
 
   const videoRefs = useRef([]);
 
-  // ✅ INIT CORRECTO
+  // 🔥 INIT
   useEffect(() => {
     const storedLiked = JSON.parse(localStorage.getItem("likedVideos")) || [];
     const storedLikes = JSON.parse(localStorage.getItem("likesCount")) || {};
 
-    // inicializar likes si no existen
     const initialLikes = {};
     data.forEach(v => {
       initialLikes[v.id] = storedLikes[v.id] || 0;
@@ -60,26 +58,16 @@ export default function Reels() {
     localStorage.setItem("likesCount", JSON.stringify(newLikes));
   };
 
-  // ▶️ PLAY
-  const togglePlay = (i) => {
-    const video = videoRefs.current[i];
-    if (!video) return;
-
-    if (video.paused) video.play();
-    else video.pause();
-  };
-
   return (
     <div className="grid md:grid-cols-2 gap-6">
 
       {data.map((v, i) => (
         <div
           key={v.id}
-          className="relative rounded-2xl overflow-hidden shadow-xl cursor-pointer"
-          onClick={() => togglePlay(i)}
+          className="relative rounded-2xl overflow-hidden shadow-xl"
         >
 
-          {/* VIDEO */}
+          {/* 🎥 VIDEO */}
           <video
             ref={(el) => (videoRefs.current[i] = el)}
             src={v.video}
@@ -90,29 +78,24 @@ export default function Reels() {
             className="w-full h-[420px] object-cover"
           />
 
-          {/* OVERLAY */}
-          <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+          {/* 👤 USER */}
+          <div className="absolute top-3 left-3 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full z-10">
 
-          {/* USER */}
-          <div className="absolute top-3 left-3 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-full">
             <a
               href={v.link}
               target="_blank"
-              onClick={(e) => e.stopPropagation()}
-              className="text-sm font-semibold text-white"
+              className="text-sm font-semibold text-white hover:text-blue-400"
             >
               @{v.user}
             </a>
+
           </div>
 
-          {/* BOTONES */}
-          <div className="absolute right-3 bottom-16 flex flex-col items-center gap-4">
+          {/* ❤️ BOTONES (NO BLOQUEADOS) */}
+          <div className="absolute right-3 bottom-20 flex flex-col items-center gap-4 z-10">
 
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                handleLike(v.id);
-              }}
+              onClick={() => handleLike(v.id)}
               className={`flex flex-col items-center ${
                 liked.includes(v.id)
                   ? "text-red-500 scale-110"
@@ -126,20 +109,19 @@ export default function Reels() {
             </button>
 
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setMuted(!muted);
-              }}
-              className="bg-black/40 p-2 rounded-full text-white"
+              onClick={() => setMuted(!muted)}
+              className="bg-black/50 p-2 rounded-full text-white"
             >
               {muted ? "🔇" : "🔊"}
             </button>
 
           </div>
 
-          {/* TEXTO */}
-          <div className="absolute bottom-3 left-3 right-3">
-            <p className="text-sm text-white">{v.title}</p>
+          {/* 📝 TEXTO (NO BLOQUEA NADA) */}
+          <div className="absolute bottom-3 left-3 max-w-[70%] pointer-events-none z-10">
+            <p className="text-sm text-white font-medium drop-shadow-lg">
+              {v.title}
+            </p>
           </div>
 
         </div>

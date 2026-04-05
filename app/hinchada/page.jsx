@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
+import Navbar from "../../components/Navbar";
 
 export default function Hinchada() {
 
@@ -37,12 +38,10 @@ export default function Hinchada() {
   const [likes, setLikes] = useState({});
   const [liked, setLiked] = useState([]);
 
-  // 🔥 INIT (MISMO SISTEMA QUE REELS)
+  // INIT
   useEffect(() => {
     const storedLiked = JSON.parse(localStorage.getItem("likedVideos")) || [];
     const storedLikes = JSON.parse(localStorage.getItem("likesCount")) || {};
-
-    setLiked(storedLiked);
 
     const initialLikes = {};
     sections.forEach(section => {
@@ -52,9 +51,10 @@ export default function Hinchada() {
     });
 
     setLikes(initialLikes);
+    setLiked(storedLiked);
   }, []);
 
-  // ❤️ LIKE
+  // LIKE
   const handleLike = (id) => {
     if (liked.includes(id)) return;
 
@@ -73,76 +73,83 @@ export default function Hinchada() {
   };
 
   return (
-    <main className="max-w-6xl mx-auto p-6 text-white">
+    <main className="bg-black min-h-screen text-white">
 
-      <h1 className="text-2xl mb-8">Hinchada 🔴⚪🔵</h1>
+      {/* 🔥 NAVBAR */}
+      <Navbar />
 
-      {sections.map((section, idx) => (
-        <div key={idx} className="mb-10">
+      <div className="max-w-6xl mx-auto p-6">
 
-          {/* PARTIDO */}
-          <h2 className="text-lg mb-4 text-gray-300">
-            {section.match}
-          </h2>
+        <h1 className="text-2xl mb-8">Hinchada 🔴⚪🔵</h1>
 
-          {/* VIDEOS */}
-          <div className="grid md:grid-cols-3 gap-6">
+        {sections.map((section, idx) => (
+          <div key={idx} className="mb-10">
 
-            {section.videos.map((v) => (
-              <div
-  key={v.id}
-  className="relative rounded-xl overflow-hidden shadow-lg"
->
+            {/* PARTIDO */}
+            <h2 className="text-lg mb-4 text-gray-300">
+              {section.match}
+            </h2>
 
-  {/* VIDEO */}
-  <video
-    src={v.video}
-    controls
-    className="w-full h-[300px] object-cover"
-  />
+            {/* VIDEOS */}
+            <div className="grid md:grid-cols-3 gap-6">
 
-  {/* USER */}
-  <div className="absolute top-2 left-2 bg-black/50 px-2 py-1 rounded-full z-20">
-    <a
-      href={v.link}
-      target="_blank"
-      onClick={(e) => e.stopPropagation()}
-      className="text-xs"
-    >
-      @{v.user}
-    </a>
-  </div>
+              {section.videos.map((v) => (
+                <div
+                  key={v.id}
+                  className="relative rounded-xl overflow-hidden shadow-lg"
+                >
 
-  {/* LIKE */}
-  <div className="absolute right-3 bottom-3 flex flex-col items-center z-20">
+                  {/* VIDEO */}
+                  <video
+                    src={v.video}
+                    controls
+                    className="w-full h-[300px] object-cover"
+                  />
 
-    <button
-      onClick={(e) => {
-        e.stopPropagation();
-        handleLike(v.id);
-      }}
-      className={`text-lg ${
-        liked.includes(v.id)
-          ? "text-red-500 scale-110"
-          : "text-white"
-      }`}
-    >
-      ❤️
-    </button>
+                  {/* USER */}
+                  <div className="absolute top-2 left-2 bg-black/50 px-2 py-1 rounded-full z-20">
+                    <a
+                      href={v.link}
+                      target="_blank"
+                      onClick={(e) => e.stopPropagation()}
+                      className="text-xs"
+                    >
+                      @{v.user}
+                    </a>
+                  </div>
 
-    <span className="text-xs text-white">
-      {likes[v.id] || 0}
-    </span>
+                  {/* LIKE */}
+                  <div className="absolute right-3 bottom-3 flex flex-col items-center z-20">
 
-  </div>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleLike(v.id);
+                      }}
+                      className={`text-lg ${
+                        liked.includes(v.id)
+                          ? "text-red-500 scale-110"
+                          : "text-white"
+                      }`}
+                    >
+                      ❤️
+                    </button>
 
-</div>
-            ))}
+                    <span className="text-xs text-white">
+                      {likes[v.id] || 0}
+                    </span>
+
+                  </div>
+
+                </div>
+              ))}
+
+            </div>
 
           </div>
+        ))}
 
-        </div>
-      ))}
+      </div>
 
     </main>
   );
